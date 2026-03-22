@@ -1,47 +1,23 @@
 package com.example.ex111024;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class settings extends AppCompatActivity {
-
-    EditText setUserName;
+public class credits extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_credits);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        setUserName = findViewById(R.id.setUserName);
-    }
-
-    public void resetHighscore(View view){
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("highScore", 0);
-        editor.apply();
-        Toast.makeText(this, "Highscore reset", Toast.LENGTH_SHORT).show();
-    }
-
-    public void setUsrName(View view){
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("userName", setUserName.getText().toString());
-        editor.apply();
-        Toast.makeText(this, "Username set", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -75,5 +51,4 @@ public class settings extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }

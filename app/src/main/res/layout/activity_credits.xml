@@ -6,53 +6,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".settings">
+    tools:context=".credits">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#2196F3"
-        app:title="Settings"
+        app:title="Credits"
         app:titleTextColor="@android:color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="24dp"
+        android:gravity="center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User Name"
-            android:textSize="18sp"
-            android:layout_marginBottom="8dp"/>
-
-        <EditText
-            android:id="@+id/setUserName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Enter your name"
-            android:inputType="text"
+            android:text="Quiz Game App"
+            android:textSize="24sp"
+            android:textStyle="bold"
             android:layout_marginBottom="16dp"/>
 
-        <Button
-            android:id="@+id/button8"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="setUsrName"
-            android:text="Save User Name"
-            android:layout_marginBottom="32dp"/>
+            android:layout_marginBottom="8dp"
+            android:text="Credits:"
+            android:textSize="18sp" />
 
-        <Button
-            android:id="@+id/button7"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="resetHighscore"
-            android:text="Reset Highscore"
-            android:backgroundTint="#F44336"/>
+            android:layout_marginBottom="32dp"
+            android:text="adi waizman / Albert levi"
+            android:textColor="#2196F3"
+            android:textSize="20sp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thank you for playing!"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"/>
 
     </LinearLayout>
+
 </LinearLayout>

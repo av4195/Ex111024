@@ -1,15 +1,23 @@
 package com.example.ex111024;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -17,6 +25,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private final String FILENAME = "q.txt";
+    private final String PFILENAME = "pq.txt";
+
     ArrayList<Question> questions = new ArrayList<>();
 
     TextView textView;
@@ -28,16 +38,26 @@ public class MainActivity extends AppCompatActivity {
     Button button5;
 
     int score = 0;
+    int highScore = 0;
+    String highScoreUserName;
     int currentQuestionIndex = 0;
-
+    String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Now you can call it directly without try-catch
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        highScore = sharedPreferences.getInt("highScore", 0);
+        userName = sharedPreferences.getString("userName", "user");
+        highScoreUserName = sharedPreferences.getString("highScoreUserName", "user");
+
         loadQuestions();
+        loadQuestionsPrivate();
 
         textView = findViewById(R.id.textView);
         button = findViewById(R.id.button);
@@ -46,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         button4 = findViewById(R.id.button4);
         textView2 = findViewById(R.id.textView2);
         button5 = findViewById(R.id.button5);
-
 
         showQuestion(currentQuestionIndex);
     }
@@ -60,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
             button3.setText(question.getAnswer3());
             button4.setText(question.getAnswer4());
         }
-
     }
 
     public void buttonClicked(View view) {
@@ -74,20 +92,18 @@ public class MainActivity extends AppCompatActivity {
 
         if (isCorrect) {
             score++;
-            clickedButton.setBackgroundColor(Color.GREEN);
+            clickedButton.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
         } else {
-            clickedButton.setBackgroundColor(Color.RED);
+            clickedButton.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
         }
 
-        // Disable buttons to prevent multiple clicks during the delay
         setButtonsEnabled(false);
 
-        // Add a delay of 1.5 seconds before moving to the next question
         clickedButton.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Reset color back to original
-                clickedButton.setBackgroundColor(Color.parseColor("#2196F3FF"));
+                // Reset to original blue color
+                clickedButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#2196F3")));
 
                 currentQuestionIndex++;
                 if (currentQuestionIndex < questions.size()) {
@@ -97,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 showScore();
                 
-                // Re-enable buttons for the next question (if any)
                 if (currentQuestionIndex < questions.size()) {
                     setButtonsEnabled(true);
                 }
@@ -112,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
         button4.setEnabled(enabled);
     }
 
-
     private void loadQuestions() {
         String fileName = FILENAME.substring(0, FILENAME.length() - 4);
         int resourceId = this.getResources().getIdentifier(fileName, "raw", this.getPackageName());
@@ -122,13 +136,11 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Try-with-resources handles closing the streams and catching the IOException
         try (InputStream inputStream = this.getResources().openRawResource(resourceId);
              InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
              BufferedReader bR = new BufferedReader(inputStreamReader)) {
 
             String line;
-            // Read the first line (the question) and check if it's null
             while ((line = bR.readLine()) != null) {
                 String questionText = line;
                 String answer1 = bR.readLine();
@@ -143,13 +155,83 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         } catch (Exception e) {
-            // Handle exceptions here instead of throwing them to onCreate
             Log.e("LoadQuestions", "Error reading questions file", e);
         }
     }
 
+    public void loadQuestionsPrivate(){
+        try{
+            FileInputStream fIS = openFileInput(PFILENAME);
+            InputStreamReader iSR = new InputStreamReader(fIS);
+            BufferedReader bR = new BufferedReader(iSR);
+
+            String line;
+            while ((line = bR.readLine()) != null) {
+                String questionText = line;
+                String answer1 = bR.readLine();
+                String answer2 = bR.readLine();
+                String answer3 = bR.readLine();
+                String answer4 = bR.readLine();
+                String correctStr = bR.readLine();
+
+                if (correctStr != null) {
+                    int correctAnswer = Integer.parseInt(correctStr);
+                    questions.add(new Question(questionText, answer1, answer2, answer3, answer4, correctAnswer));
+                }
+            }
+            bR.close();
+            iSR.close();
+            fIS.close();
+        }
+        catch (Exception e){
+            Log.e("LoadQuestions", "Private questions file not found or error reading.");
+        }
+    }
 
     private void showScore(){
-        textView2.setText("Score: " + score);
+        if(score > highScore){
+            highScore = score;
+            highScoreUserName = userName;
+            SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("highScore", highScore);
+            editor.putString("highScoreUserName", highScoreUserName);
+            editor.apply();
+        }
+
+        String st = "Score: " + score + "\nHigh Score: " + highScore + "\nHigh Score User: " + highScoreUserName;
+        textView2.setText(st);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item){
+        String title = item.getTitle().toString();
+        Intent intent = null;
+
+        if (title.equals("game")){
+            intent = new Intent(this, MainActivity.class);
+        }
+        else if (title.equals("Add question")){
+            intent = new Intent(this, addQ.class);
+        }
+        else if (title.equals("Settings")){
+            intent = new Intent(this, settings.class);
+        }
+        else if (title.equals("Credits")){
+            intent = new Intent(this, credits.class);
+        }
+
+        if (intent != null) {
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

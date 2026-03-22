@@ -1,12 +1,18 @@
-how1
-t1
-r2
-y3
-u4
+Which animal can change its color?
+A.Elephant
+B. Chameleon
+C. Lion
+D. Giraffe
 2
-do?
-h1
-f2
-k3
-l4
+Which animal can sleep while standing up?
+A. Dog
+B. Cat
+C. Horse
+D. Monkey
+3
+Which animal is the largest in the world?
+A. Elephant
+B. Shark
+C. Giraffe
+D. Blue whale
 4
