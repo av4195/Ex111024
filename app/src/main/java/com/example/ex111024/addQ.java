@@ -16,6 +16,7 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
+
 public class addQ extends AppCompatActivity {
 
     EditText editTextText;
@@ -27,6 +28,11 @@ public class addQ extends AppCompatActivity {
     private final String FILENAME = "pq.txt";
 
 
+    /**
+     * Initializes the activity, sets the content view, and sets up the toolbar and UI elements.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +49,12 @@ public class addQ extends AppCompatActivity {
         button6 = findViewById(R.id.button6);
     }
 
+    /**
+     * Collects the question data from the UI and appends it to the internal file.
+     * Navigates back to MainActivity upon completion.
+     *
+     * @param view The view that was clicked.
+     */
     public void addQuestion(View view){
         StringBuilder sb = new StringBuilder();
         sb.append(editTextText.getText().toString());
@@ -79,12 +91,24 @@ public class addQ extends AppCompatActivity {
     }
 
 
+    /**
+     * Inflates the menu resource into the existing menu.
+     *
+     * @param menu The options menu in which you place your items.
+     * @return true for the menu to be displayed.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Handles selection of menu items for navigation between activities.
+     *
+     * @param item The menu item that was selected.
+     * @return true to consume the selection here.
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item){
         String title = item.getTitle().toString();

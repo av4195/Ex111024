@@ -13,10 +13,24 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+/**
+ * @author Adi Waizman
+ * @version 1.0
+ * @since 22/03/2026
+ * <p>
+ * This class handles the settings for the quiz game, including
+ * resetting the high score and setting the user's name.
+ */
 public class settings extends AppCompatActivity {
 
+    /** EditText for entering the user's name. */
     EditText setUserName;
 
+    /**
+     * Initializes the settings activity and its UI components.
+     *
+     * @param savedInstanceState A Bundle containing the data most recently supplied in onSaveInstanceState(Bundle).
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +42,11 @@ public class settings extends AppCompatActivity {
         setUserName = findViewById(R.id.setUserName);
     }
 
+    /**
+     * Resets the high score to zero in SharedPreferences.
+     *
+     * @param view The view that was clicked (the "Reset Highscore" button).
+     */
     public void resetHighscore(View view){
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -36,6 +55,11 @@ public class settings extends AppCompatActivity {
         Toast.makeText(this, "Highscore reset", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Saves the username provided in the EditText field to SharedPreferences.
+     *
+     * @param view The view that was clicked (the "Save User Name" button).
+     */
     public void setUsrName(View view){
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -44,12 +68,24 @@ public class settings extends AppCompatActivity {
         Toast.makeText(this, "Username set", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Inflates the menu options for this activity.
+     *
+     * @param menu The menu object to inflate.
+     * @return true if the menu was created.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Handles the selection of a menu item.
+     *
+     * @param item The menu item selected.
+     * @return true if handled.
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item){
         String title = item.getTitle().toString();

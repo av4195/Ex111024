@@ -22,11 +22,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+/**
+ * @author Adi Waizman
+ * @version 1.0
+ * @since 22/03/2026
+ * <p>
+ * This class is the main activity of a quiz game app.
+ * It manages the display of questions, user interaction, scoring, and high scores.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private final String FILENAME = "q.txt";
     private final String PFILENAME = "pq.txt";
 
+    /** List of questions loaded from resources and internal storage. */
     ArrayList<Question> questions = new ArrayList<>();
 
     TextView textView;
@@ -43,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
     int currentQuestionIndex = 0;
     String userName;
 
+    /**
+     * This method is called when the activity is created and sets up the UI, 
+     * initializes the toolbar, loads preferences, and loads questions.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle).
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +85,12 @@ public class MainActivity extends AppCompatActivity {
         showQuestion(currentQuestionIndex);
     }
 
+    /**
+     * This method displays a question and its four possible answers on the UI
+     * based on the provided index in the questions list.
+     *
+     * @param index The index of the question to display.
+     */
     public void showQuestion(int index) {
         if (index >= 0 && index < questions.size()) {
             Question question = questions.get(index);
@@ -81,6 +102,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method is called when the user clicks an answer button.
+     * It checks if the answer is correct, updates the score, provides visual feedback, 
+     * and schedules the transition to the next question.
+     *
+     * @param view The button view that was clicked.
+     */
     public void buttonClicked(View view) {
         final Button clickedButton = (Button) view;
         String buttonText = clickedButton.getText().toString();
@@ -120,6 +148,12 @@ public class MainActivity extends AppCompatActivity {
         }, 1500);
     }
 
+    /**
+     * Sets the enabled state of all answer buttons.
+     * This is used to prevent multiple clicks while a question result is being displayed.
+     *
+     * @param enabled True to enable buttons, false to disable them.
+     */
     private void setButtonsEnabled(boolean enabled) {
         button.setEnabled(enabled);
         button2.setEnabled(enabled);
@@ -127,6 +161,9 @@ public class MainActivity extends AppCompatActivity {
         button4.setEnabled(enabled);
     }
 
+    /**
+     * Loads the predefined questions from the raw resource file (q.txt).
+     */
     private void loadQuestions() {
         String fileName = FILENAME.substring(0, FILENAME.length() - 4);
         int resourceId = this.getResources().getIdentifier(fileName, "raw", this.getPackageName());
@@ -159,6 +196,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Loads user-created questions from the internal storage file (pq.txt).
+     */
     public void loadQuestionsPrivate(){
         try{
             FileInputStream fIS = openFileInput(PFILENAME);
@@ -188,6 +228,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Updates and displays the current score and high score.
+     * If the current score exceeds the high score, it updates the high score in SharedPreferences.
+     */
     private void showScore(){
         if(score > highScore){
             highScore = score;
@@ -203,12 +247,25 @@ public class MainActivity extends AppCompatActivity {
         textView2.setText(st);
     }
 
+    /**
+     * Inflates the menu; this adds items to the action bar if it is present.
+     *
+     * @param menu The options menu in which you place your items.
+     * @return You must return true for the menu to be displayed; if you return false it will not be shown.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * This hook is called whenever an item in your options menu is selected.
+     * It handles navigation between different activities of the app.
+     *
+     * @param item The menu item that was selected.
+     * @return boolean Return false to allow normal menu processing to proceed, true to consume it here.
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item){
         String title = item.getTitle().toString();
