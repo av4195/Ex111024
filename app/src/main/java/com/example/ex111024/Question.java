@@ -25,6 +25,20 @@ public class Question {
         }
     }
 
+    public boolean checkAnswer(String userAnswer) {
+        String correctText = "";
+
+        // Determine which string corresponds to the correct integer index
+        switch (correctAnswer) {
+            case 1: correctText = answer1; break;
+            case 2: correctText = answer2; break;
+            case 3: correctText = answer3; break;
+            case 4: correctText = answer4; break;
+        }
+
+        return userAnswer.equals(correctText);
+    }
+
 
     public String getAnswer1() {
         return answer1;

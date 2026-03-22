@@ -1,7 +1,9 @@
 package com.example.ex111024;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -25,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
     TextView textView2;
     Button button5;
 
+    int score = 0;
+    int currentQuestionIndex = 0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +48,7 @@ public class MainActivity extends AppCompatActivity {
         button5 = findViewById(R.id.button5);
 
 
-        showQuestion(0);
-
+        showQuestion(currentQuestionIndex);
     }
 
     public void showQuestion(int index) {
@@ -57,6 +62,56 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    public void buttonClicked(View view) {
+        final Button clickedButton = (Button) view;
+        String buttonText = clickedButton.getText().toString();
+        
+        if (currentQuestionIndex >= questions.size()) return;
+
+        Question currentQuestion = questions.get(currentQuestionIndex);
+        boolean isCorrect = currentQuestion.checkAnswer(buttonText);
+
+        if (isCorrect) {
+            score++;
+            clickedButton.setBackgroundColor(Color.GREEN);
+        } else {
+            clickedButton.setBackgroundColor(Color.RED);
+        }
+
+        // Disable buttons to prevent multiple clicks during the delay
+        setButtonsEnabled(false);
+
+        // Add a delay of 1.5 seconds before moving to the next question
+        clickedButton.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Reset color back to original
+                clickedButton.setBackgroundColor(Color.parseColor("#2196F3FF"));
+
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.size()) {
+                    showQuestion(currentQuestionIndex);
+                } else {
+                    textView.setText("Quiz Finished!");
+                }
+                showScore();
+                
+                // Re-enable buttons for the next question (if any)
+                if (currentQuestionIndex < questions.size()) {
+                    setButtonsEnabled(true);
+                }
+            }
+        }, 1500);
+    }
+
+    private void setButtonsEnabled(boolean enabled) {
+        button.setEnabled(enabled);
+        button2.setEnabled(enabled);
+        button3.setEnabled(enabled);
+        button4.setEnabled(enabled);
+    }
+
 
     private void loadQuestions() {
         String fileName = FILENAME.substring(0, FILENAME.length() - 4);
@@ -91,5 +146,10 @@ public class MainActivity extends AppCompatActivity {
             // Handle exceptions here instead of throwing them to onCreate
             Log.e("LoadQuestions", "Error reading questions file", e);
         }
+    }
+
+
+    private void showScore(){
+        textView2.setText("Score: " + score);
     }
 }
